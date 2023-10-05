@@ -16,18 +16,19 @@ class PatronUser(AbstractUser):
     name= models.CharField(max_length= 200, blank= False, default="anonymous")
     patron_choice= models.CharField(choices=PARTRON)
     
-    def add_to_user_model(self):
-            CustomUser.objects.update_or_create(self)
-            self.save()
+    # def add_to_user_model(self):
+    #         CustomUser.objects.update_or_create(self)
+    #         self.save()
     
-    def add_to_org_model(self):
-        if self.patron_choice== "organisations".lower():
-            CustomOrganization.objects.update_or_create(self)
-            self.save()
+    # def add_to_org_model(self):
+    #     if self.patron_choice== "organisations".lower():
+    #         CustomOrganization.objects.update_or_create(self)
+    #         self.save()
             
 class CustomUser(PatronUser):
     account_number= models.IntegerField(max_length= 255)
     contact= PhoneNumberField(blank= True)
+    services= models.ManyToManyField("Products", blank= True )
     #this field below tracks the total number of transaction the user deals with, be it a debit or a credit
     total_transaction= models.PositiveIntegerField(default=0)
     funds= models.DecimalField(default=0, max_digits=10, decimal_places=2)
@@ -37,7 +38,9 @@ class CustomUser(PatronUser):
         self.save()
 
 class CustomOrganization(PatronUser):
-    services= models.CharField()
+    services= models.ManyToManyField("Products", blank= True )
+    company_contact= PhoneNumberField(blank= False)
+
 
 #this invoice model belongs to user/organization. it could be extended to add more features as needed by the app
 class InvoiceModel(models.Model):
