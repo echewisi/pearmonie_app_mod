@@ -3,3 +3,4 @@ env
 migrations
 __pycache__
 .env
+notes.txt
