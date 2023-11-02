@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 
 
 
@@ -10,7 +9,7 @@ from django.dispatch import receiver
 PARTRON=(("organisations", "Organisations"),
         ("users", "Users"))
 
-class PatronUser(models.Model):
+class PatronUser(AbstractUser):
     """remember to make this a uuid field"""
     name= models.CharField(max_length= 200, blank= False, default="anonymous")
     patron_choice= models.CharField(choices=PARTRON)
@@ -69,11 +68,5 @@ class Customers(models.Model):
     
     
     
-@receiver(post_save, sender= PatronUser )
-def user_added(sender, instance, created, **kwargs ):
-    if created:
-        if instance.patron_choice == "users".lower():
-            CustomUser.objects.update_or_create(instance)
-        elif instance.patron_choice== "organizations".lower():
-            CustomOrganization.objects.update_or_create(instance)
+
 # Create your models here.

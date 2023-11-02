@@ -1,9 +1,12 @@
 from django import forms
 from .models import PatronUser, CustomOrganization, CustomUser
+from django.contrib.auth.forms import UserCreationForm
 
-
-class PatronRegsitrationForm(forms.Form):
-    name= forms.CharField()
-    email
-    password1
-
+class PatronUserRegsitrationForm(UserCreationForm):
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'password1', 'password2', 'name', 'account_number', 'contact')
+class PatronOrganizationForm(forms.Form):
+    class Meta:
+        model = CustomOrganization
+        fields = ('username', 'password1', 'password2', 'name', 'company_contact')
